@@ -1,12 +1,9 @@
 const http = require('http');
-const url = require('url');
 
 const server = http.createServer((req, res) => {
-  const pathname = url.parse(req.url).pathname;
+  console.log("New request:", req.method, req.url);
 
-  if (pathname === '/upload' && req.method === 'POST') {
-    console.log("New upload request:", req.method, req.url);
-
+  if (req.method === 'POST' && req.url.startsWith('/upload')) {
     let bytes = 0;
 
     req.on('data', chunk => {
@@ -23,11 +20,10 @@ const server = http.createServer((req, res) => {
     req.on('close', () => {
       console.log("Connection closed early");
     });
-
   } else {
-    // default response for other routes
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end("Hello from server\n");
+    // Fallback for other routes
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end("Not found\n");
   }
 });
 
