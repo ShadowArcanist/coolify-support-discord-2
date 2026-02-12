@@ -3,7 +3,8 @@ const http = require('http');
 const server = http.createServer((req, res) => {
   console.log("New request:", req.method, req.url);
 
-  if (req.method === 'POST' && req.url.startsWith('/upload')) {
+  // Only handle /upload route
+  if (req.url === '/upload' && req.method === 'POST') {
     let bytes = 0;
 
     req.on('data', chunk => {
@@ -21,9 +22,8 @@ const server = http.createServer((req, res) => {
       console.log("Connection closed early");
     });
   } else {
-    // Fallback for other routes
     res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end("Not found\n");
+    res.end("Not Found\n");
   }
 });
 
